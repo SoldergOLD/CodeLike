@@ -1,9 +1,13 @@
+#pragma once
 #include <iostream>
+#include <initializer_list>
+
+using std::initializer_list;
 
 class Node
 {
     public:
-        Node(int value, Node* next);
+        Node(int value);
         int _value;
         Node* _next;
 };
@@ -11,9 +15,12 @@ class Node
 class List
 {
     public:
-        List(int size, Node* head);
-        int push(Node* node);
+        List();
+        List(initializer_list<int> initList);
+        int printList(void);
         List& operator++();
+        List operator++(int);
+        ~List();
     private:
         int _size;
         Node* _head;

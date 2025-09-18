@@ -11,11 +11,14 @@ TARGET := main
 all: $(TARGET)
 
 # 链接生成可执行文件
-$(TARGET): main.o
+$(TARGET): main.o List.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # 编译 main.cc 生成 main.o
 main.o: main.cc
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+List.o: List.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # 清理编译生成的文件
