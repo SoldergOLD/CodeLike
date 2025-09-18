@@ -7,6 +7,7 @@ List::List()
 :_size(0), _head(nullptr), _cur(nullptr){}
 
 List::List(initializer_list<int> initList)
+:_size(0), _head(nullptr), _cur(nullptr)
 {
     Node* tail = nullptr;
     for(int value : initList)
@@ -38,28 +39,37 @@ List::List(const List& other) : _size(0), _head(nullptr), _cur(nullptr) {
             tail->_next = newNode;
         }
         tail = newNode;
-        // 如果 other._cur 指向当前节点，设置 this->_cur
+        // 检查并设置 _cur 指针
         if (otherCur == other._cur) {
             _cur = newNode;
         }
         otherCur = otherCur->_next;
         _size++;
     }
+    // 确保复制后的链表正确终结
+    if (tail != nullptr) {
+        tail->_next = nullptr;
+    }
+    // 如果 other._cur 为 nullptr，确保 this->_cur 也为 nullptr
+    if (other._cur == nullptr) {
+        _cur = nullptr;
+    }
+}
+
+// List 的 swap 成员函数定义
+void List::swap(List& other) noexcept {
+    using std::swap;         // 允许 ADL（参数依赖查找）
+    swap(_head, other._head); // 交换头指针
+    swap(_cur, other._cur);   // 交换当前指针
+    swap(_size, other._size); // 交换大小
 }
 
 List& List::operator=(const List& other) {
     if (this != &other) { // 防止自赋值
         List temp(other); // 用拷贝构造函数创建副本
-        my_swap(temp);       // 交换 *this 和 temp 的内容
+        swap(temp);       // 交换 *this 和 temp 的内容
     }                     // temp 析构，释放原资源
     return *this;
-}
-// 需要实现 swap 成员函数
-void List::my_swap(List& other) noexcept {
-    using std::swap;
-    swap(_head, other._head);
-    swap(_cur, other._cur);
-    swap(_size, other._size);
 }
 
 List::~List()
@@ -87,31 +97,18 @@ List& List::operator++()
     return *this;
 }
 
-List List::operator++(int)
-{
-    List temp = *this;
-    if(temp._cur != nullptr)
-    {
-        temp._cur = temp._cur->_next;
-    }
-    return temp;
+List List::operator++(int) {
+    List temp = *this; // 保存原状态
+    ++(*this);         // 使用前置++来递增本对象
+    return temp;       // 返回原状态
 }
 
-int List::printList(void)
-{
-    Node* head = this->_head;
-    for(int i = 0; i < this->_size; ++i)
-    {
-        if(i == this->_size -1)
-        {
-            printf("%d\n",head->_value);
-        }
-        else
-        {
-            printf("%d->",head->_value);
-        }
-        
-        head = head->_next;
+int List::printList(void) {
+    Node* current = _head;
+    while (current != nullptr) {
+        printf("%d->", current->_value);
+        current = current->_next;
     }
+    printf("NULL\n"); // 明确表示链表结束
     return 0;
 }

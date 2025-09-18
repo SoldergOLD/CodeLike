@@ -2,6 +2,7 @@
 #include <iostream>
 #include <initializer_list>
 #include <algorithm>
+#include <utility>
 
 using std::swap;
 using std::initializer_list;
@@ -24,7 +25,7 @@ class List
         List operator++(int);
         List(const List& other);
         List& operator=(const List& other);
-        void my_swap(List& other);
+        void swap(List& other) noexcept;
         ~List();
     private:
         int _size;
